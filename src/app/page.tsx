@@ -19,6 +19,8 @@ export default function Home() {
   const router = useRouter();
 
   const [showForm, setShowForm] = useState(false)
+  const [hasVoted, setHasVoted] = useState(false)
+  const [isOwner, setIsOwner] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     description: ''
@@ -36,13 +38,13 @@ export default function Home() {
   const checkIsOwner = async () => {
     const contract = new ethers.Contract(CONTRACT_ADDRESS_VOTING, contractABIVoting, signer);
     const isOwner = await contract.checkIsOnwer();
+    setIsOwner(isOwner);
+  }
 
-    if (isOwner) {
-      setShowForm(true);
-      return;
-    }
-
-    alert('You are not the owner of this contract');
+  const checkHasVoted = async () => {
+    const contract = new ethers.Contract(CONTRACT_ADDRESS_VOTING, contractABIVoting, signer);
+    const hasVoted = await contract.checkHasVoted();
+    setHasVoted(hasVoted);
   }
 
   const createCandidate = async (e: React.FormEvent) => {
@@ -88,8 +90,11 @@ export default function Home() {
 
 
   useEffect(() => {
-    if (signer)
+    if (signer) {
       getAllCandidates();
+      checkIsOwner();
+      checkHasVoted();
+    }
   }, [signer]);
 
 
@@ -103,11 +108,11 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         {/* <Button onClick={getAllCandidates} variant={"secondary"} className="mr-4">get all candidate</Button> */}
         <Button onClick={navigateToRegister} variant={"secondary"} className="mr-4">Register</Button>
-        {!showForm && (
+        {!showForm && isOwner && (
           <Button onClick={checkIsOwner}>Create Candidate</Button>
         )}
 
-        {showForm && (
+        {showForm && isOwner && (
           <Card className="w-full max-w-md mx-auto">
             <CardHeader>
               <CardTitle>Add New Candidate</CardTitle>

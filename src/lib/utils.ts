@@ -343,6 +343,19 @@ export const contractABIVoting = [
   },
   {
     "inputs": [],
+    "name": "checkHasVoted",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "checkIsOnwer",
     "outputs": [
       {
