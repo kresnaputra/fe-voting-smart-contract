@@ -11,10 +11,10 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { useEthersStore } from "@/store/ethers-store";
 import CandidateCard, { Candidate } from "@/components/Candidate";
 import { useRouter } from "next/navigation";
-import { CONTRACT_ADDRESS_VOTING, contractABIVoting } from "@/lib/utils";
+import { CONTRACT_ADDRESS_VOTING, contractABIVoting, getInformation } from "@/lib/utils";
 
 export default function Home() {
-  const { signer, provider } = useEthersStore();
+  const { signer, provider, setBalance } = useEthersStore();
 
   const router = useRouter();
 
@@ -56,6 +56,7 @@ export default function Home() {
       setFormData({ name: '', description: '' })
       setShowForm(false);
       getAllCandidates();
+      getInformation({ signer, provider, setBalance })
     } catch (error: any) {
       console.log('error', error)
     }
@@ -109,7 +110,7 @@ export default function Home() {
         {/* <Button onClick={getAllCandidates} variant={"secondary"} className="mr-4">get all candidate</Button> */}
         <Button onClick={navigateToRegister} variant={"secondary"} className="mr-4">Register</Button>
         {!showForm && isOwner && (
-          <Button onClick={checkIsOwner}>Create Candidate</Button>
+          <Button onClick={() => setShowForm(true)}>Create Candidate</Button>
         )}
 
         {showForm && isOwner && (
@@ -156,7 +157,7 @@ export default function Home() {
         <h2 className="text-2xl font-bold mb-6">Candidate List</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {candidates.map((candidate) => (
-            <CandidateCard key={candidate.id} candidate={candidate} />
+            <CandidateCard key={candidate.id} candidate={candidate} checkVoted={checkHasVoted} hasVoted={hasVoted} />
           ))}
         </div>
       </div>

@@ -7,10 +7,10 @@ import { Label } from "@/components/ui/label"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import { useEthersStore } from '@/store/ethers-store';
 import { ethers } from 'ethers';
-import { CONTRACT_ADDRESS_USER, contractABIUser } from '@/lib/utils';
+import { CONTRACT_ADDRESS_USER, contractABIUser, getInformation } from '@/lib/utils';
 
 export default function RegisterPage() {
-  const { signer } = useEthersStore();
+  const { signer, provider, setBalance, setSigner } = useEthersStore();
 
 
   const [formData, setFormData] = useState({ id: '', name: '' })
@@ -30,11 +30,11 @@ export default function RegisterPage() {
       const tx = await contract.add(formData.name, formData.id);
       await tx.wait();
       setFormData({ id: '', name: '' })
+      getInformation({ signer, provider, setBalance })
     } catch (error: any) {
       console.log('error', error)
       alert(error.reason)
     }
-
   }
 
   return (

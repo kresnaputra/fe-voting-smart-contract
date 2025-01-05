@@ -1,5 +1,9 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { formatEther } from 'ethers'
+import { Signer } from "ethers";
+import { JsonRpcProvider } from "ethers";
+import { BrowserProvider } from "ethers";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -543,3 +547,17 @@ export const contractABIVoting = [
     "type": "function"
   }
 ]
+
+interface IState {
+  setBalance: (balance: string) => void
+  signer: Signer | null
+  provider: BrowserProvider | JsonRpcProvider | null
+}
+
+export const getInformation = async ({ signer, provider, setBalance }: IState) => {
+  if (signer && provider) {
+    const address = await signer.getAddress();
+    const balance = await provider.getBalance(address);
+    setBalance(formatEther(balance));
+  }
+};

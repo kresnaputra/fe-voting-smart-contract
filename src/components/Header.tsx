@@ -11,12 +11,10 @@ import {
 import { Menu, Wallet } from 'lucide-react'
 import { getEthereumProvider } from '@/utils/ether'
 import { useEthersStore } from '@/store/ethers-store'
-import { formatEther } from 'ethers'
+import { getInformation } from '@/lib/utils'
 
 export default function Navbar() {
-  const { setProvider, signer, setSigner, provider } = useEthersStore();
-
-  const [balance, setBalance] = useState('0');
+  const { setProvider, signer, setSigner, provider, setBalance, balance } = useEthersStore();
 
   const initializeEthereum = async () => {
     try {
@@ -38,17 +36,13 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    const getInformation = async () => {
-      if (signer && provider) {
-        const address = await signer.getAddress();
-        const balance = await provider.getBalance(address);
-        setBalance(formatEther(balance));
-      }
-    };
-
-
     if (provider && signer) {
-      getInformation();
+      getInformation({
+        signer,
+        provider,
+        setBalance,
+        setSigner
+      });
     }
   }, [provider, signer]);
 

@@ -10,7 +10,7 @@ export interface Candidate {
   description: string
 }
 
-function CandidateCard({ candidate }: { candidate: Candidate }) {
+function CandidateCard({ candidate, checkVoted, hasVoted }: { candidate: Candidate, checkVoted: () => void, hasVoted: boolean }) {
   const { signer } = useEthersStore();
 
   const vote = async () => {
@@ -18,6 +18,7 @@ function CandidateCard({ candidate }: { candidate: Candidate }) {
       const contract = new ethers.Contract(CONTRACT_ADDRESS_VOTING, contractABIVoting, signer);
       const tx = await contract.vote(candidate.id);
       await tx.wait();
+      checkVoted();
     } catch (error: any) {
       alert(error.reason)
     }
@@ -35,7 +36,9 @@ function CandidateCard({ candidate }: { candidate: Candidate }) {
           </div>
         </div>
         <p className="text-sm text-gray-700">{candidate.description}</p>
-        <Button onClick={vote} className='mt-2'>Vote</Button>
+        {!hasVoted && (
+          <Button onClick={vote} className='mt-2'>Vote</Button>
+        )}
       </div>
     </div>
   )
