@@ -420,6 +420,25 @@ export const contractABIVoting = [
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_indexCandidate",
+        "type": "uint256"
+      }
+    ],
+    "name": "getCandidateVoters",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getTheMostVoteCandidates",
     "outputs": [
@@ -485,6 +504,19 @@ export const contractABIVoting = [
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "_indexCandidate",
+        "type": "uint256"
+      }
+    ],
+    "name": "removeCandidate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "_index",
         "type": "uint256"
       }
@@ -541,6 +573,30 @@ export const contractABIVoting = [
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "voters",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",

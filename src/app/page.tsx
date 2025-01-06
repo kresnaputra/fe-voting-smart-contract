@@ -66,8 +66,6 @@ export default function Home() {
     try {
       const contract = new ethers.Contract(CONTRACT_ADDRESS_VOTING, contractABIVoting, signer);
       const candidates = await contract.getAllCandidates();
-
-
       const candidatesArray: Candidate[] = [];
 
       candidates.map((candidate: { name: string; desc: string }, index: number) => {
@@ -107,12 +105,10 @@ export default function Home() {
   return (
     <div>
       <div className="container mx-auto px-4 py-8">
-        {/* <Button onClick={getAllCandidates} variant={"secondary"} className="mr-4">get all candidate</Button> */}
         <Button onClick={navigateToRegister} variant={"secondary"} className="mr-4">Register</Button>
         {!showForm && isOwner && (
           <Button onClick={() => setShowForm(true)}>Create Candidate</Button>
         )}
-
         {showForm && isOwner && (
           <Card className="w-full max-w-md mx-auto">
             <CardHeader>
@@ -153,11 +149,12 @@ export default function Home() {
           </Card>
         )}
       </div>
+
       <div className="container mx-auto px-4 py-8">
         <h2 className="text-2xl font-bold mb-6">Candidate List</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {candidates.map((candidate) => (
-            <CandidateCard key={candidate.id} candidate={candidate} checkVoted={checkHasVoted} hasVoted={hasVoted} />
+            <CandidateCard key={candidate.id} candidate={candidate} checkVoted={checkHasVoted} hasVoted={hasVoted} isOwner={isOwner} getCandidates={getAllCandidates} />
           ))}
         </div>
       </div>

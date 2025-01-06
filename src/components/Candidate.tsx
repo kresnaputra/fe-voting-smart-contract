@@ -10,7 +10,7 @@ export interface Candidate {
   description: string
 }
 
-function CandidateCard({ candidate, checkVoted, hasVoted }: { candidate: Candidate, checkVoted: () => void, hasVoted: boolean }) {
+function CandidateCard({ candidate, checkVoted, hasVoted, isOwner, getCandidates }: { candidate: Candidate, checkVoted: () => void, hasVoted: boolean, isOwner: boolean, getCandidates: () => void }) {
   const { signer } = useEthersStore();
 
   const vote = async () => {
@@ -19,6 +19,18 @@ function CandidateCard({ candidate, checkVoted, hasVoted }: { candidate: Candida
       const tx = await contract.vote(candidate.id);
       await tx.wait();
       checkVoted();
+    } catch (error: any) {
+      alert(error.reason)
+    }
+  }
+
+  const deleteCandidate = async () => {
+    try {
+      const contract = new ethers.Contract(CONTRACT_ADDRESS_VOTING, contractABIVoting, signer);
+      const tx = await contract.removeCandidate(candidate.id);
+      await tx.wait();
+      checkVoted();
+      getCandidates();
     } catch (error: any) {
       alert(error.reason)
     }
@@ -36,9 +48,14 @@ function CandidateCard({ candidate, checkVoted, hasVoted }: { candidate: Candida
           </div>
         </div>
         <p className="text-sm text-gray-700">{candidate.description}</p>
-        {!hasVoted && (
-          <Button onClick={vote} className='mt-2'>Vote</Button>
-        )}
+        <div className='mt-2'>
+          {!hasVoted && (
+            <Button onClick={vote} >Vote</Button>
+          )}
+          {isOwner && (
+            <Button onClick={deleteCandidate} variant={"destructive"} className={!hasVoted ? 'ml-2' : 'ml-0'}>Delete</Button>
+          )}
+        </div>
       </div>
     </div>
   )
